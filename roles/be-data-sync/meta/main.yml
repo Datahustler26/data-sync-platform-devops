@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  author: BrightEdge Platform Engineering
+  description: Ansible role to deploy data-sync FastAPI service on CentOS/Rocky 8 VMs
+  company: BrightEdge
+  license: MIT
+  min_ansible_version: "2.10"
+  platforms:
+    - name: EL
+      versions:
+        - "8"
+  galaxy_tags:
+    - devops
+    - fastapi
+    - systemd
+dependencies: []

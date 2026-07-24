@@ -1,0 +1,70 @@
+---
+# tasks file for be-data-sync
+
+- name: Deploy data-sync microservice
+  when: be_role == 'service'
+  block:
+    - name: Create system group for data-sync
+      ansible.builtin.group:
+        name: "{{ data_sync_group }}"
+        state: present
+        system: true
+
+    - name: Create system user for data-sync
+      ansible.builtin.user:
+        name: "{{ data_sync_user }}"
+        group: "{{ data_sync_group }}"
+        state: present
+        system: true
+        shell: /sbin/nologin
+        home: "{{ data_sync_dest }}"
+
+    - name: Install Python 3.9, pip, git, and virtualenv dependencies via Yum/DNF (CentOS/Rocky 8)
+      ansible.builtin.dnf:
+        name:
+          - python39
+          - python39-pip
+          - python39-devel
+          - git
+          - gcc
+        state: present
+
+    - name: Ensure target directory structure exists
+      ansible.builtin.file:
+        path: "{{ data_sync_dest }}"
+        state: directory
+        owner: "{{ data_sync_user }}"
+        group: "{{ data_sync_group }}"
+        mode: '0755'
+
+    - name: Clone or update data-sync repository
+      ansible.builtin.git:
+        repo: "{{ data_sync_repo_url }}"
+        dest: "{{ data_sync_dest }}"
+        version: "{{ data_sync_repo_version }}"
+        update: true
+        force: true
+      register: git_clone
+
+    - name: Install Python dependencies into virtualenv
+      ansible.builtin.pip:
+        requirements: "{{ data_sync_dest }}/requirements.txt"
+        virtualenv: "{{ data_sync_venv }}"
+        virtualenv_command: /usr/bin/python3.9 -m venv
+      notify: Restart be-data-sync service
+
+    - name: Deploy systemd unit file from Jinja2 template
+      ansible.builtin.template:
+        src: data-sync.service.j2
+        dest: /etc/systemd/system/data-sync.service
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Restart be-data-sync service
+
+    - name: Ensure data-sync service is enabled and running
+      ansible.builtin.systemd:
+        name: data-sync
+        enabled: true
+        state: started
+        daemon_reload: true

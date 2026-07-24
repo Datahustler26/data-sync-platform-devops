@@ -1,0 +1,8 @@
+---
+# group_vars/service.yml for data-sync service VMs
+
+data_sync_app_env: "production"
+data_sync_redis_host: "redis-master.internal.brightedge.com"
+data_sync_redis_port: 6379
+data_sync_log_level: "INFO"
+be_role: "service"

@@ -1,0 +1,43 @@
+# Staging environment values for data-sync Helm chart.
+
+replicaCount: 2
+
+image:
+  repository: brightedge/data-sync
+  pullPolicy: IfNotPresent
+  tag: "1.0.0-staging"
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 75
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+serviceMonitor:
+  enabled: true
+  interval: 30s
+  path: /metrics
+  release: kube-prometheus-stack
+
+env:
+  appEnv: staging
+  redisHost: redis-staging.data-sync.svc.cluster.local
+  redisPort: 6379
+  logLevel: INFO
+  workers: 4
+  maxConnections: 100
+
+secret:
+  redisPassword: "staging-secure-redis-password"

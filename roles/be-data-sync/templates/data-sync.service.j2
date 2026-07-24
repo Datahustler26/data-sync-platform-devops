@@ -1,0 +1,21 @@
+[Unit]
+Description=BrightEdge Data Sync FastAPI Microservice
+After=network.target redis.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ data_sync_user }}
+Group={{ data_sync_group }}
+WorkingDirectory={{ data_sync_dest }}
+Environment="APP_ENV={{ data_sync_app_env }}"
+Environment="REDIS_HOST={{ data_sync_redis_host }}"
+Environment="REDIS_PORT={{ data_sync_redis_port }}"
+Environment="LOG_LEVEL={{ data_sync_log_level }}"
+ExecStart={{ data_sync_venv }}/bin/uvicorn main:app --host 0.0.0.0 --port 8080 --workers 4
+Restart=always
+RestartSec=5s
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
