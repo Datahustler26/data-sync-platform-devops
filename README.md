@@ -117,8 +117,7 @@ flowchart TB
 ├── group_vars/
 │   └── service.yml                         # Group variables for 'service' VMs
 ├── DESIGN.md                               # Architectural design document (Scaling, Isolation, Secrets)
-├── README.md                               # Platform documentation & operational guide
-└── verify_assignment.py                    # Automated test & verification script
+└── README.md                               # Platform documentation & operational guide
 ```
 
 ---
@@ -267,37 +266,3 @@ The comprehensive design document [DESIGN.md](file:///c:/Users/ROHIT/Desktop/Dev
 > [!WARNING]
 > **Zero-Downtime Secret Rotation**: Solved using dual-password authentication in Redis & FastAPI, External Secrets Operator / Reloader delivery, rolling update strategy (`maxUnavailable: 0`), and active health verification.
 
----
-
-## 🧪 Automated Local Verification
-
-You can verify the entire repository anytime without needing a live cluster by running:
-
-```bash
-python verify_assignment.py
-```
-
-### Expected Output:
-```
-==========================================================
- BRIGHTEDGE DEVOPS ASSIGNMENT - CHECKS & VERIFICATION
-==========================================================
-
-[CHECK 1/4] Validating 12 YAML configuration files...
-  [OK] PASS: group_vars\service.yml
-  [OK] PASS: helm\charts\data-sync\Chart.yaml
-  [OK] PASS: helm\charts\data-sync\values.production.yaml
-  ...
-[CHECK 2/4] Checking 14 Helm & Kustomize files...
-  [OK] PASS: helm/charts/data-sync/templates/deployment.yaml
-  ...
-[CHECK 3/4] Checking 7 Ansible role files & Jinja2 template rendering...
-  [OK] PASS: Jinja2 systemd unit template rendered successfully.
-[CHECK 4/4] Checking Documentation files...
-  [OK] PASS: README.md (6772 bytes)
-  [OK] PASS: DESIGN.md (7176 bytes)
-
-==========================================================
- ALL CHECKS PASSED SUCCESSFULLY! PROJECT IS 100% READY.
-==========================================================
-```
