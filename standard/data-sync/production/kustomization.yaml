@@ -3,6 +3,7 @@ kind: Kustomization
 
 helmCharts:
   - name: data-sync
+    repo: ../../../helm/charts
     releaseName: data-sync
     valuesFile: ../../../helm/charts/data-sync/values.production.yaml
 
