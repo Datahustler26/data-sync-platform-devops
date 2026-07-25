@@ -2,11 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: data-sync
+  annotations:
+    reloader.stakater.com/auto: "true"
 spec:
   template:
-    metadata:
-      annotations:
-        reloader.stakater.com/auto: "true"
     spec:
       topologySpreadConstraints:
         - maxSkew: 1
