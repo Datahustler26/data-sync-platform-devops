@@ -40,4 +40,4 @@ env:
   maxConnections: 200
 
 secret:
-  redisPassword: "prod-highly-secure-redis-password"
+  redisPassword: "" # Injected at deployment time via --set secret.redisPassword="$PROD_REDIS_PASSWORD"

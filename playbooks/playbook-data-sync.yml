@@ -3,7 +3,4 @@
   hosts: service
   become: true
   roles:
-    - role: be-data-sync
-      tags:
-        - install
-        - deploy
+    - role: be_data_sync

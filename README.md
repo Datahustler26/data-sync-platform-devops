@@ -46,7 +46,7 @@ flowchart TB
 
     subgraph VMInfra["🖥️ CentOS/Rocky 8 VM Infrastructure (Ansible Managed)"]
         AnsiblePlay["Ansible Playbook\n(playbook-data-sync.yml)"]
-        Role["Ansible Role: be-data-sync\n(Virtualenv @ /srv/data-sync/venv)"]
+        Role["Ansible Role: be_data_sync\n(Virtualenv @ /srv/data-sync/venv)"]
         Systemd["Systemd Service\n(data-sync.service)"]
     end
 
@@ -105,7 +105,7 @@ flowchart TB
 │           ├── kustomization.yaml          # Kustomize overlay referencing Helm base
 │           └── deployment-patch.yaml       # GCP Zone topologySpreadConstraint & SECRET_CHECKSUM
 ├── roles/
-│   └── be-data-sync/
+│   └── be_data_sync/
 │       ├── defaults/main.yml            # Default role variables
 │       ├── handlers/main.yml            # Systemd service restart handler
 │       ├── tasks/main.yml               # Yum/DNF install, git clone, venv, systemd tasks
@@ -211,7 +211,7 @@ kubectl kustomize standard/data-sync/production | kubectl apply -n data-sync-pro
 
 ---
 
-## 🔧 Part 2: Ansible VM Infrastructure (`be-data-sync`)
+## 🔧 Part 2: Ansible VM Infrastructure (`be_data_sync`)
 
 ### Ansible Provisioning Architecture
 
@@ -242,7 +242,7 @@ sequenceDiagram
 ansible-playbook playbooks/playbook-data-sync.yml --syntax-check
 
 # 2. Run Ansible-Lint
-ansible-lint playbooks/playbook-data-sync.yml roles/be-data-sync/
+ansible-lint playbooks/playbook-data-sync.yml roles/be_data_sync/
 
 # 3. Deploy full installation on 'service' host group
 ansible-playbook -i inventory.ini playbooks/playbook-data-sync.yml --tags "install,deploy"
@@ -255,7 +255,7 @@ ansible-playbook -i inventory.ini playbooks/playbook-data-sync.yml --tags "deplo
 
 ## 📐 Part 3: Architectural Design Highlights (`DESIGN.md`)
 
-The comprehensive design document [DESIGN.md](file:///c:/Users/ROHIT/Desktop/Devops%20task%20Brightedge/DESIGN.md) addresses high-scale challenges (50M req/day, 2000 req/s burst):
+The comprehensive design document [DESIGN.md](DESIGN.md) addresses high-scale challenges (50M req/day, 2000 req/s burst):
 
 > [!IMPORTANT]
 > **Sub-20s Scale-Out Lag**: Solved by implementing **KEDA (Kubernetes Event-driven Autoscaling)** using HTTP request rate leading metrics, aggressive HPA step-up scaling, GKE Image Streaming, and scheduled baseline pre-warming.

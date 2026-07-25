@@ -1,5 +1,5 @@
 ---
-# tasks file for be-data-sync
+# tasks file for be_data_sync
 
 - name: Deploy data-sync microservice
   when: be_role == 'service'
@@ -9,6 +9,8 @@
         name: "{{ data_sync_group }}"
         state: present
         system: true
+      tags:
+        - install
 
     - name: Create system user for data-sync
       ansible.builtin.user:
@@ -18,6 +20,8 @@
         system: true
         shell: /sbin/nologin
         home: "{{ data_sync_dest }}"
+      tags:
+        - install
 
     - name: Install Python 3.9, pip, git, and virtualenv dependencies via Yum/DNF (CentOS/Rocky 8)
       ansible.builtin.dnf:
@@ -28,6 +32,8 @@
           - git
           - gcc
         state: present
+      tags:
+        - install
 
     - name: Ensure target directory structure exists
       ansible.builtin.file:
@@ -36,6 +42,8 @@
         owner: "{{ data_sync_user }}"
         group: "{{ data_sync_group }}"
         mode: '0755'
+      tags:
+        - install
 
     - name: Clone or update data-sync repository
       ansible.builtin.git:
@@ -45,13 +53,17 @@
         update: true
         force: true
       register: git_clone
+      tags:
+        - deploy
 
     - name: Install Python dependencies into virtualenv
       ansible.builtin.pip:
         requirements: "{{ data_sync_dest }}/requirements.txt"
         virtualenv: "{{ data_sync_venv }}"
         virtualenv_command: /usr/bin/python3.9 -m venv
-      notify: Restart be-data-sync service
+      notify: Restart be_data_sync service
+      tags:
+        - deploy
 
     - name: Deploy systemd unit file from Jinja2 template
       ansible.builtin.template:
@@ -60,7 +72,9 @@
         owner: root
         group: root
         mode: '0644'
-      notify: Restart be-data-sync service
+      notify: Restart be_data_sync service
+      tags:
+        - deploy
 
     - name: Ensure data-sync service is enabled and running
       ansible.builtin.systemd:
@@ -68,3 +82,5 @@
         enabled: true
         state: started
         daemon_reload: true
+      tags:
+        - deploy

@@ -40,4 +40,4 @@ env:
   maxConnections: 100
 
 secret:
-  redisPassword: "staging-secure-redis-password"
+  redisPassword: "" # Injected at deployment time via --set secret.redisPassword="$STAGING_REDIS_PASSWORD"

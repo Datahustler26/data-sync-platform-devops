@@ -6,7 +6,7 @@ spec:
   template:
     metadata:
       annotations:
-        SECRET_CHECKSUM: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        reloader.stakater.com/auto: "true"
     spec:
       topologySpreadConstraints:
         - maxSkew: 1

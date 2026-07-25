@@ -1,7 +1,7 @@
 ---
-# handlers file for be-data-sync
+# handlers file for be_data_sync
 
-- name: Restart be-data-sync service
+- name: Restart be_data_sync service
   ansible.builtin.systemd:
     name: data-sync
     state: restarted
