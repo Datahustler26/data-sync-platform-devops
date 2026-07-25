@@ -1,0 +1,3 @@
+# .ansible-lint configuration file
+skip_list:
+  - var-naming
